@@ -320,14 +320,31 @@ const QString &LedDeviceLightpack::getSerialNumber() const
 	return _serialNumber;
 }
 
+//int LedDeviceLightpack::writeBytes(uint8_t *data, int size)
+//{
+////	std::cout << "Writing " << size << " bytes: ";
+////	for (int i = 0; i < size ; ++i) printf("%02x ", data[i]);
+////	std::cout << std::endl;
+//
+//	int error = libusb_control_transfer(_deviceHandle, static_cast<uint8_t>( LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE ),
+//		0x09,
+//		(2 << 8),
+//		0x00,
+//		data, size, 1000);
+//
+//	if (error == size)
+//	{
+//		return 0;
+//	}
+//
+//	Error(_log, "Unable to write %d bytes to Lightpack device(%d): %s", size, error, libusb_error_name(error));
+//	return error;
+// }
+
 int LedDeviceLightpack::writeBytes(uint8_t *data, int size)
 {
-//	std::cout << "Writing " << size << " bytes: ";
-//	for (int i = 0; i < size ; ++i) printf("%02x ", data[i]);
-//	std::cout << std::endl;
-
 	int error = libusb_control_transfer(_deviceHandle,
-									 static_cast<uint8_t>( LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE ),
+		LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE,
 		0x09,
 		(2 << 8),
 		0x00,
@@ -341,6 +358,7 @@ int LedDeviceLightpack::writeBytes(uint8_t *data, int size)
 	Error(_log, "Unable to write %d bytes to Lightpack device(%d): %s", size, error, libusb_error_name(error));
 	return error;
 }
+
 
 int LedDeviceLightpack::disableSmoothing()
 {
